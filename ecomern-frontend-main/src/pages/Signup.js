@@ -5,13 +5,32 @@ import "./Signup.css";
 import { useSignupMutation } from "../services/appApi";
 
 function Signup() {
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [signup, { error, isLoading, isError }] = useSignupMutation();
 
+  function isPasswordValid() {
+    // Password must be greater than 15 characters
+    // Must contain symbols and both small and capital alphabets
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{16,}$/;
+    return passwordRegex.test(password);
+  }
+
   function handleSignup(e) {
     e.preventDefault();
+
+    if (!isPasswordValid()) {
+      // Password does not meet the criteria
+      // Display a window alert with the criteria
+      alert(
+        "Password must be greater than 15 characters and contain symbols, both small and capital alphabets."
+      );
+      return;
+    }
+
+    // Continue with signup if password is valid
     signup({ name, email, password });
   }
 
